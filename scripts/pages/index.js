@@ -1,93 +1,31 @@
-import recipes from "../../data/recipes.js";
-import Ingredient from "../models/Ingredient.js";
-import Recipe from "../models/Recipe.js";
+import items from "../../data/recipes.js";
+import FilterBy from "../models/FilterBy.js";
+import Recipes from "../models/Recipes.js";
 
 
-function getRecipesList() {
+let list = new Recipes();
 
-    const recipesList = [];
-    recipes.forEach(recipe => {
-        
-        let ingredientsList = [];
-        let ustensilsList = [];
-        recipe.ingredients.forEach(ingredient => {
-            ingredientsList.push(new Ingredient(ingredient.ingredient, ingredient.quantity, ingredient.unit));
-        });
+list.hydrate(items);
 
-        recipe.ustensils.forEach(ustensil => {
-            ustensilsList.push(ustensil);
-        })
+list.display();
 
-        recipesList.push(new Recipe(
-            recipe.id, recipe.name, recipe.servings, ingredientsList, recipe.time,
-            recipe.description, recipe.appliance, ustensilsList));
-    });
-    return recipesList;
-}
+const filterByIngredient = new FilterBy(list, 'ingredient', 'primary', 'Ingrédients');
+//const filterByAppliance = new FilterBy(list, 'appliance', 'secondary', 'Appareils');
+//const filterByUstensil = new FilterBy(list, 'ustensil', 'tertiary', 'Ustensiles');
 
-function getIngredientsList() {
-    const ingredientsList = [];
-    recipes.forEach(recipe => {
-        recipe.ingredients.forEach(ingredient => {
-            ingredientsList.push(new Ingredient(ingredient.ingredient, ingredient.quantity, ingredient.unit));
-        })
-    })
-    /*
-    ingredientList = ingredientList.filter((value, index, self) => {
-        index === self.findIndex((t) => {
-            t.ingredient === value.ingredient && t.quantity === value.quantity && t.unit === value.unit
-        })
-    })
-    */
-    return ingredientsList;
-}
+filterByIngredient.buildDropdown();
+filterByIngredient.getAllIngredients();
+filterByIngredient.display();
 
-function getAppliancesList() {
-    const appliancesList = [];
-    recipes.forEach(recipe => {
-        appliancesList.push(recipe.appliance);
-    })
-    return appliancesList;
-}
 
-function getUstensilsList() {
-    const ustensilsList = [];
-    recipes.forEach(recipe => {
-        recipe.ustensils.forEach(ustensil => {
-            ustensilsList.push(ustensil);
-        })
-    })
-    return ustensilsList;
-}
 
-function removeDuplicates(data) {
-    let unique = data.reduce(function (a, b) {
-        if(a.indexOf(b) < 0) a.push(b);
-        return a;
-    }, []);
- 
-    return unique;
-}
 
-function displayRecipesList(list) {
-    const recipeSection = document.getElementById('recipe-section');
-    let htmlToDisplay = '';
-    list.forEach(item => {
-        htmlToDisplay += item.render();
-    })
-    recipeSection.innerHTML = htmlToDisplay; 
-}
+/*
+filterByAppliance.buildDropdown();
 
-function init() {
-    displayRecipesList(getRecipesList());
-}
+filterByAppliance.display();
 
-init();
+filterByUstensil.buildDropdown();
 
-let test1 = getIngredientsList();
-let test2 = getUstensilsList();
-let test3 = getAppliancesList()
-
-console.log(removeDuplicates(test1));
-console.log(removeDuplicates(test2));
-console.log(removeDuplicates(test3));
+filterByUstensil.display();
+*/

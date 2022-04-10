@@ -1,47 +1,57 @@
 export default class Recipe {
-    constructor(id, name, servings, ingredients, time, desc, appliance, ustensils) {
-        this.id = id;
-        this.name = name;
-        this.servings = servings;
-        this.ingredients = ingredients;
-        this.time = time;
-        this.desc = desc;
-        this.appliance = appliance;
-        this.ustensils = ustensils;
+    constructor(data) {
+        this.id = data.id;
+        this.name = data.name;
+        this.servings = data.servings;
+        this.ingredients = data.ingredients;
+        this.time = data.time;
+        this.description = data.description;
+        this.appliance = data.appliance;
+        this.ustensils = data.ustensils;
+    }
+
+    getIngredients() {
+        return this.ingredients.map(item => item.ingredient );
     }
 
     render() {
         let ingredientsList = ''
         this.ingredients.forEach(item => {
-            ingredientsList += item.render();
+            if(item.unit) {
+                ingredientsList += `<strong>${item.ingredient}: </strong>${item.quantity} ${item.unit}<br>`
+            } else if(item.quantity) {
+                ingredientsList += `<strong>${item.ingredient}: </strong>${item.quantity}<br>`
+            } else {
+                ingredientsList += `<strong>${item.ingredient}</strong><br>`
+            }
         });
         return `
-        <article class="recipe_card">
-            <div class="recipe_card_img"></div>
-            <div class="recipe_card_info">
-                <div class="recipe_card_title">
-                    <p>${this.name}</p>
-                    <strong>${this.time} min</strong>
+            <article class="recipe_card">
+                <div class="recipe_card_img"></div>
+                <div class="recipe_card_info">
+                    <div class="recipe_card_title">
+                        <p>${this.name}</p>
+                        <strong>${this.time} min</strong>
+                    </div>
+                    <div class="recipe_card_ingredients">
+                        <p>
+                            ${ingredientsList}
+                        </p>
+                    </div>
+                    <div class="recipe_card_desc">
+                        <p>${this.limitStr(this.description,200)}</p>
+                    </div>
                 </div>
-                <div class="recipe_card_ingredients">
-                    <p>
-                        ${ingredientsList}
-                    </p>
-                </div>
-                <div class="recipe_card_desc">
-                    <p>${this.limitDesc(this.desc,200)}</p>
-                </div>
-            </div>
-        </article>
-        `
+            </article>
+            `
     }
 
-    limitDesc(desc, limit) {
+    limitStr(str, limit = 100) {
         var dots = "...";
-        if(desc.length > limit)
+        if(str.length > limit)
         {
-          desc = desc.substring(0,limit) + dots;
+            str = str.substring(0,limit) + dots;
         }
-        return desc;
+        return str;
     }
 }
