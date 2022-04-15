@@ -133,7 +133,8 @@ export default class FilterBy {
             this.selection.forEach(tag => {
                 this.list.filtered.forEach(recipe => {
                     recipe.getIngredients().forEach(ingredient => {
-                         return tag === ingredient;
+                        console.log(tag === ingredient);
+                        return tag === ingredient;
                     });
                 })
             })
