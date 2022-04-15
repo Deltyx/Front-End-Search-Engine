@@ -3,6 +3,7 @@ import Recipe from "./Recipe.js";
 export default class Recipes {
     constructor() {
         this.all = [];
+        this.filtered = [];
     }
 
     hydrate(items) {
@@ -10,11 +11,12 @@ export default class Recipes {
             let recipe = new Recipe(item)
             this.all.push(recipe);
         });
+        this.filtered = this.all;
     }
 
     display() {
         let html = '';
-        this.all.forEach(recipe => {
+        this.filtered.forEach(recipe => {
             html += recipe.render();
         })
         document.getElementById('recipe-section').innerHTML = html;

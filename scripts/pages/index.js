@@ -16,6 +16,7 @@ const filterByIngredient = new FilterBy(list, 'ingredient', 'primary', 'Ingrédi
 filterByIngredient.buildDropdown();
 filterByIngredient.getAllIngredients();
 filterByIngredient.display();
+filterByIngredient.listen();
 
 
 

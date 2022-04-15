@@ -1,3 +1,5 @@
+import Tags from "./Tags.js";
+
 export default class FilterBy {
     constructor(list, ref, color, placeholder) {
         this.ref = ref;
@@ -5,6 +7,7 @@ export default class FilterBy {
         this.placeholder = placeholder;
         this.list = list;
         this.all = new Set();
+        this.selection = new Set();
     }
 
     buildDropdown() {
@@ -28,6 +31,7 @@ export default class FilterBy {
     }
 
     getAllIngredients() {
+        this.all = new Set();
         this.list.all.forEach(recipe => {
             recipe.getIngredients().forEach(ingredient => {
                 this.all.add(ingredient);
@@ -35,8 +39,18 @@ export default class FilterBy {
         })
     }
 
+    showSelection() {
+        let html = '';
+        this.selection.forEach(tag => {
+            html += new Tags(this.color, tag).render();
+        })
+        document.getElementById('tag_selection').innerHTML = html;
+        this.listenForUnselect();
+    }
+
     showDropdownContent() {
         document.getElementById(`dropdown_filterBy_${this.ref}_content`).style.display = "grid";
+        this.listenForSelect();
     }
 
     hideDropdownContent() {
@@ -54,8 +68,7 @@ export default class FilterBy {
 
     listenOnKeyUp() {
         let input = document.getElementById(`filterBy_${this.ref}_search`);
-        input.addEventListener('keyup', (e) => {
-            console.log(e.target.value.toUpperCase());
+        input.addEventListener('keyup', () => {
             let dropdownContent = document.getElementById(`dropdown_filterBy_${this.ref}_content`).getElementsByClassName('dropdown_item');
             for(let i=0; i < dropdownContent.length; i++) {
                 if(dropdownContent[i].innerText.toUpperCase().indexOf(input.value.toUpperCase()) > -1) {
@@ -77,6 +90,30 @@ export default class FilterBy {
         })
     }
 
+    listenForSelect() {
+        this.all.forEach(tag => {
+            document.querySelector(`.dropdown_item[data-value="${tag}"]`).addEventListener('click', () => {
+                this.selection.add(tag);
+                this.showSelection();
+                console.log({Selection: this.selection});
+                this.filter(this.list.filtered);
+                console.log({Filtered: this.list.filtered});
+            })
+        })
+    }
+
+    listenForUnselect() {
+        this.selection.forEach(tag => {
+            document.querySelector(`.tag_btn[data-value="${tag}"]`).addEventListener('click', () => {
+                this.selection.delete(tag);
+                this.showSelection();
+                console.log({Selection: this.selection});
+                this.filter(this.list.all);
+                console.log({All: this.list.all});
+            })
+        })
+    }
+
     listen() {
         this.listenOnFocus();
         this.listenOnKeyUp();
@@ -86,9 +123,20 @@ export default class FilterBy {
     display() {
         let html = ''
         this.all.forEach(item => {
-            html += `<div class="dropdown_item">${item}</div>`
+            html += `<div class="dropdown_item" data-value="${item}">${item}</div>`
         })
         document.getElementById(`dropdown_filterBy_${this.ref}_content`).innerHTML = html
-        this.listen();
+    }
+
+    filter(recipes) {
+        this.list.filtered = recipes.filter(() => {
+            this.selection.forEach(tag => {
+                this.list.filtered.forEach(recipe => {
+                    recipe.getIngredients().forEach(ingredient => {
+                         return tag === ingredient;
+                    });
+                })
+            })
+        })
     }
 }
