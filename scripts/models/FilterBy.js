@@ -30,13 +30,25 @@ export default class FilterBy {
         `
     }
 
-    getAllIngredients() {
+    collect() {
         this.all = new Set();
-        this.list.all.forEach(recipe => {
+        this.list.filtered.forEach(recipe => {
             recipe.getIngredients().forEach(ingredient => {
                 this.all.add(ingredient);
             });
         })
+    }
+
+    dropdownContentFilter() {
+        let dropdownContent = document.getElementById(`dropdown_filterBy_${this.ref}_content`).getElementsByClassName('dropdown_item');
+        for(let i=0; i < dropdownContent.length; i++) {
+            if(dropdownContent[i].innerText.toUpperCase().indexOf(document.getElementById(`filterBy_${this.ref}_search`).value.toUpperCase()) > -1
+            || this.selection.has(dropdownContent[i].innerText)) {
+                dropdownContent[i].style.display = "";
+            } else {
+                dropdownContent[i].style.display = "none";
+            }
+        }
     }
 
     showSelection() {
@@ -67,16 +79,8 @@ export default class FilterBy {
     }
 
     listenOnKeyUp() {
-        let input = document.getElementById(`filterBy_${this.ref}_search`);
-        input.addEventListener('keyup', () => {
-            let dropdownContent = document.getElementById(`dropdown_filterBy_${this.ref}_content`).getElementsByClassName('dropdown_item');
-            for(let i=0; i < dropdownContent.length; i++) {
-                if(dropdownContent[i].innerText.toUpperCase().indexOf(input.value.toUpperCase()) > -1) {
-                    dropdownContent[i].style.display = "";
-                } else {
-                    dropdownContent[i].style.display = "none";
-                }
-            }
+        document.getElementById(`filterBy_${this.ref}_search`).addEventListener('keyup', () => {
+            this.dropdownContentFilter();
         })
     }
 
@@ -95,9 +99,12 @@ export default class FilterBy {
             document.querySelector(`.dropdown_item[data-value="${tag}"]`).addEventListener('click', () => {
                 this.selection.add(tag);
                 this.showSelection();
-                console.log({Selection: this.selection});
                 this.filter(this.list.filtered);
                 console.log({Filtered: this.list.filtered});
+                this.collect();
+                this.display();
+                this.listenForSelect();
+                this.list.display();
             })
         })
     }
@@ -107,9 +114,12 @@ export default class FilterBy {
             document.querySelector(`.tag_btn[data-value="${tag}"]`).addEventListener('click', () => {
                 this.selection.delete(tag);
                 this.showSelection();
-                console.log({Selection: this.selection});
                 this.filter(this.list.all);
-                console.log({All: this.list.all});
+                console.log({Filtered: this.list.filtered});
+                this.collect();
+                this.display();
+                this.listenForSelect();
+                this.list.display();
             })
         })
     }
@@ -129,15 +139,14 @@ export default class FilterBy {
     }
 
     filter(recipes) {
-        this.list.filtered = recipes.filter(() => {
-            this.selection.forEach(tag => {
-                this.list.filtered.forEach(recipe => {
-                    recipe.getIngredients().forEach(ingredient => {
-                        console.log(tag === ingredient);
-                        return tag === ingredient;
-                    });
-                })
+        let tags = [];
+        this.selection.forEach(tag => tags.push(tag));
+        if(this.selection.size == 0) {
+            this.list.filtered = this.list.all;
+        } else {
+            this.list.filtered = recipes.filter(recipe => {
+                return tags.every(tag => recipe.getIngredients().includes(tag))
             })
-        })
+        }
     }
 }

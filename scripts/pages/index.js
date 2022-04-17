@@ -14,7 +14,7 @@ const filterByIngredient = new FilterBy(list, 'ingredient', 'primary', 'Ingrédi
 //const filterByUstensil = new FilterBy(list, 'ustensil', 'tertiary', 'Ustensiles');
 
 filterByIngredient.buildDropdown();
-filterByIngredient.getAllIngredients();
+filterByIngredient.collect();
 filterByIngredient.display();
 filterByIngredient.listen();
 
