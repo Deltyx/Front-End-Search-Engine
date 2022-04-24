@@ -10,6 +10,10 @@ export default class Recipe {
         this.ustensils = data.ustensils;
     }
 
+    getAppliance() {
+        return this.appliance;
+    }
+
     getIngredients() {
         return this.ingredients.map(item => item.ingredient );
     }

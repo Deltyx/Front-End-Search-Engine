@@ -1,6 +1,6 @@
 import Tags from "./Tags.js";
 
-export default class FilterBy {
+export default class Filter {
     constructor(list, ref, color, placeholder) {
         this.ref = ref;
         this.color = color;
@@ -10,9 +10,9 @@ export default class FilterBy {
         this.selection = new Set();
     }
 
-    buildDropdown() {
-        document.getElementById('filters_section').innerHTML = `
-        <div class="search_tag_wrapper ${this.color}">
+    async buildDropdown() {
+        document.getElementById('filters_section').innerHTML += `
+        <div class="search_tag_wrapper  ${this.color}">
             <div class="search_tag_input_wrapper">
                 <input id="filterBy_${this.ref}_search" class="search_tag_input" type="text" placeholder="${this.placeholder}">
                 <button id="dropdown_filterBy_${this.ref}_btn" class="search_tag_btn">
@@ -30,15 +30,6 @@ export default class FilterBy {
         `
     }
 
-    collect() {
-        this.all = new Set();
-        this.list.filtered.forEach(recipe => {
-            recipe.getIngredients().forEach(ingredient => {
-                this.all.add(ingredient);
-            });
-        })
-    }
-
     dropdownContentFilter() {
         let dropdownContent = document.getElementById(`dropdown_filterBy_${this.ref}_content`).getElementsByClassName('dropdown_item');
         for(let i=0; i < dropdownContent.length; i++) {
@@ -53,9 +44,11 @@ export default class FilterBy {
 
     showSelection() {
         let html = '';
+        console.log(this.selection);
         this.selection.forEach(tag => {
             html += new Tags(this.color, tag).render();
         })
+        console.log(html);
         document.getElementById('tag_selection').innerHTML = html;
         this.listenForUnselect();
     }
@@ -73,9 +66,17 @@ export default class FilterBy {
         document.getElementById(`filterBy_${this.ref}_search`).addEventListener('focus', () => {
             this.showDropdownContent();
         })
-        document.getElementById(`filterBy_${this.ref}_search`).addEventListener('blur', () => {
-            this.hideDropdownContent();
-        })
+    }
+
+    listenOnUnFocus() {
+        /*
+        document.getElementById('container').addEventListener('click', (e) => {
+            if(document.getElementById(`filterBy_${this.ref}_search`) != e.target 
+            || 
+            document.getElementById(`dropdown_filterBy_${this.ref}_btn`) != e.target) {
+                this.hideDropdownContent();
+            }
+        })*/
     }
 
     listenOnKeyUp() {
@@ -90,7 +91,7 @@ export default class FilterBy {
                 this.hideDropdownContent();
             } else {
                 this.showDropdownContent();
-            }
+            } 
         })
     }
 
@@ -126,6 +127,7 @@ export default class FilterBy {
 
     listen() {
         this.listenOnFocus();
+        this.listenOnUnFocus();
         this.listenOnKeyUp();
         this.listenOnClick();
     }
@@ -133,20 +135,16 @@ export default class FilterBy {
     display() {
         let html = ''
         this.all.forEach(item => {
-            html += `<div class="dropdown_item" data-value="${item}">${item}</div>`
+            let classes = (this.selection.has(item)) ? 'dropdown_item-selected' : ''
+            html += `<div class="dropdown_item ${classes}" data-value="${item}">${item}</div>`
         })
         document.getElementById(`dropdown_filterBy_${this.ref}_content`).innerHTML = html
     }
 
-    filter(recipes) {
-        let tags = [];
-        this.selection.forEach(tag => tags.push(tag));
-        if(this.selection.size == 0) {
-            this.list.filtered = this.list.all;
-        } else {
-            this.list.filtered = recipes.filter(recipe => {
-                return tags.every(tag => recipe.getIngredients().includes(tag))
-            })
-        }
+    async start() {
+        await this.buildDropdown();
+        this.collect();
+        this.display();
+        this.listen();
     }
 }

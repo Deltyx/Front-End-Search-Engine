@@ -2,6 +2,7 @@
     --primary: #3282f7;
     --primary-dark: #2767c3;
     --secondary: #68d9a4;
+    --secondary-dark: #4fa57d; 
     --tertiary: #ed6454;
 }
 
@@ -64,7 +65,7 @@ body {
 }
 
 .search_btn:hover {
-    background-color: gray;
+    filter: brightness(85%)
 }
 
 .tag_section {
@@ -78,7 +79,6 @@ body {
 .tag_btn {
     border: none;
     border-radius: 5px;
-    background-color: var(--primary);
     color: white;
     font-size: 18px;
     display: flex;
@@ -100,7 +100,6 @@ body {
 }
 
 .search_tag_wrapper {
-    background-color: var(--primary);
     border-radius: 5px;
     display: flex;
     flex-direction: column;
@@ -143,7 +142,7 @@ body {
 }
 
 .search_tag_btn:hover {
-    background-color: grey;
+    background-color: gray;
 }
 
 .search_tag_btn > svg{
@@ -234,4 +233,8 @@ body {
 
 .dropdown_item:hover {
     font-style: italic;
+}
+
+.dropdown_item-selected {
+    text-decoration: line-through;
 }
