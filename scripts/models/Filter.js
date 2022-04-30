@@ -12,8 +12,8 @@ export default class Filter {
 
     async buildDropdown() {
         document.getElementById('filters_section').innerHTML += `
-        <div class="search_tag_wrapper  ${this.color}">
-            <div class="search_tag_input_wrapper">
+        <div id="filterBy_${this.ref}" class="search_tag_wrapper">
+            <div class="search_tag_input_wrapper ${this.color}">
                 <input id="filterBy_${this.ref}_search" class="search_tag_input" type="text" placeholder="${this.placeholder}">
                 <button id="dropdown_filterBy_${this.ref}_btn" class="search_tag_btn">
                     <svg fill="#FFFFFF" width="25" height="25" version="1.1" id="lni_lni-chevron-down" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -25,7 +25,7 @@ export default class Filter {
                     </svg>
                 </button>
             </div>
-            <div id="dropdown_filterBy_${this.ref}_content" class="dropdown_filterBy_content"></div>
+            <div id="dropdown_filterBy_${this.ref}_content" class="dropdown_filterBy_content ${this.color}"></div>
         </div>
         `
     }
@@ -68,15 +68,12 @@ export default class Filter {
         })
     }
 
-    listenOnUnFocus() {
-        /*
-        document.getElementById('container').addEventListener('click', (e) => {
-            if(document.getElementById(`filterBy_${this.ref}_search`) != e.target 
-            || 
-            document.getElementById(`dropdown_filterBy_${this.ref}_btn`) != e.target) {
+    listenOutsideClick() {
+        document.addEventListener('click', (e) => {
+            if(!e.target.closest('.search_tag_wrapper')) {
                 this.hideDropdownContent();
             }
-        })*/
+        })
     }
 
     listenOnKeyUp() {
@@ -127,7 +124,7 @@ export default class Filter {
 
     listen() {
         this.listenOnFocus();
-        this.listenOnUnFocus();
+        this.listenOutsideClick();
         this.listenOnKeyUp();
         this.listenOnClick();
     }

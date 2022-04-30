@@ -100,7 +100,6 @@ body {
 }
 
 .search_tag_wrapper {
-    border-radius: 5px;
     display: flex;
     flex-direction: column;
     z-index: 2;
@@ -110,6 +109,7 @@ body {
     display: flex;
     justify-content: space-between;
     width: 100%;
+    border-radius: 5px;
 }
 
 .search_tag_input {
@@ -222,7 +222,8 @@ body {
     grid-template-columns: repeat(3, 0.5fr);
     max-width: 100%;
     color: white;
-    padding: 15px;
+    padding: 17px;
+    margin-top: -6px;
 }
 
 .dropdown_item {
