@@ -4,6 +4,12 @@ export default class Recipes {
     constructor() {
         this.all = [];
         this.filtered = [];
+        this.filters = [];
+    }
+
+    addFilter(filter) {
+        this.filters.push(filter);
+        filter.start(this);
     }
 
     hydrate(items) {
@@ -20,5 +26,21 @@ export default class Recipes {
             html += recipe.render();
         })
         document.getElementById('recipe-section').innerHTML = html;
+    }
+
+    filter() {
+        let list = this.filtered;
+        this.filters.forEach(filter => {
+            list = filter.filter(list);
+            console.log('filter', filter.ref, list);
+        })
+
+        this.filtered = list;
+        this.display();
+        this.filters.forEach(filter => {
+            filter.collect();
+            filter.display();
+            filter.listenForSelect();
+        })
     }
 }

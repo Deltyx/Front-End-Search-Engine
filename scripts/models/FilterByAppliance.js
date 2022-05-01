@@ -1,8 +1,8 @@
 import Filter from "./Filter.js";
 
 export default class FilterByAppliance extends Filter {
-    constructor(list) {
-        super(list, 'appliance', 'secondary', 'Appareils');
+    constructor() {
+        super('appliance', 'secondary', 'Appareils');
     }
 
     collect() {
@@ -15,12 +15,10 @@ export default class FilterByAppliance extends Filter {
     filter(recipes) {
         let tags = [];
         this.selection.forEach(tag => tags.push(tag));
-        if(this.selection.size == 0) {
-            this.list.filtered = this.list.all;
-        } else {
-            this.list.filtered = recipes.filter(recipe => {
-                return tags.every(tag => recipe.getAppliance().includes(tag))
-            })
-        }
+
+        return recipes.filter(recipe => {
+            return tags.every(tag => recipe.getAppliance().includes(tag))
+        })
+
     }
 }

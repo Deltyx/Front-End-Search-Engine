@@ -1,11 +1,11 @@
 import Tags from "./Tags.js";
 
 export default class Filter {
-    constructor(list, ref, color, placeholder) {
+    constructor(ref, color, placeholder) {
         this.ref = ref;
         this.color = color;
         this.placeholder = placeholder;
-        this.list = list;
+        this.list = null;
         this.all = new Set();
         this.selection = new Set();
     }
@@ -48,7 +48,6 @@ export default class Filter {
         this.selection.forEach(tag => {
             html += new Tags(this.color, tag).render();
         })
-        console.log(html);
         document.getElementById('tag_selection').innerHTML = html;
         this.listenForUnselect();
     }
@@ -97,12 +96,7 @@ export default class Filter {
             document.querySelector(`.dropdown_item[data-value="${tag}"]`).addEventListener('click', () => {
                 this.selection.add(tag);
                 this.showSelection();
-                this.filter(this.list.filtered);
-                console.log({Filtered: this.list.filtered});
-                this.collect();
-                this.display();
-                this.listenForSelect();
-                this.list.display();
+                this.list.filter();                
             })
         })
     }
@@ -112,12 +106,7 @@ export default class Filter {
             document.querySelector(`.tag_btn[data-value="${tag}"]`).addEventListener('click', () => {
                 this.selection.delete(tag);
                 this.showSelection();
-                this.filter(this.list.all);
-                console.log({Filtered: this.list.filtered});
-                this.collect();
-                this.display();
-                this.listenForSelect();
-                this.list.display();
+                this.list.filter();
             })
         })
     }
@@ -138,7 +127,8 @@ export default class Filter {
         document.getElementById(`dropdown_filterBy_${this.ref}_content`).innerHTML = html
     }
 
-    async start() {
+    async start(list) {
+        this.list = list;
         await this.buildDropdown();
         this.collect();
         this.display();

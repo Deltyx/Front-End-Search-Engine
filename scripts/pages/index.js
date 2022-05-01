@@ -10,9 +10,7 @@ list.hydrate(items);
 
 list.display();
 
-const filterByIngredient = new FilterByIngredient(list);
-const filterByAppliance = new FilterByAppliance(list);
-//const filterByUstensil = new FilterBy(list, 'ustensil', 'tertiary', 'Ustensiles');
+list.addFilter(new FilterByIngredient(list))
+list.addFilter(new FilterByAppliance(list))
 
-filterByIngredient.start();
-filterByAppliance.start();
+//const filterByUstensil = new FilterBy(list, 'ustensil', 'tertiary', 'Ustensiles');
