@@ -15,7 +15,11 @@ export default class Recipe {
     }
 
     getIngredients() {
-        return this.ingredients.map(item => item.ingredient );
+        return this.ingredients.map(item => item.ingredient);
+    }
+
+    getUstensils() {
+        return this.ustensils.map(item => item.ustensils);
     }
 
     render() {
