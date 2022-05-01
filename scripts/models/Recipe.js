@@ -19,7 +19,7 @@ export default class Recipe {
     }
 
     getUstensils() {
-        return this.ustensils.map(item => item.ustensils);
+        return this.ustensils;
     }
 
     render() {

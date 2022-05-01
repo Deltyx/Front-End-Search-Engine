@@ -1,6 +1,7 @@
 import items from "../../data/recipes.js";
 import FilterByIngredient from "../models/FilterByIngredient.js";
 import FilterByAppliance from "../models/FilterByAppliance.js"
+import FilterByUstensil from "../models/FilterByUstensil.js"
 import Recipes from "../models/Recipes.js";
 
 
@@ -12,5 +13,6 @@ list.display();
 
 list.addFilter(new FilterByIngredient(list))
 list.addFilter(new FilterByAppliance(list))
+list.addFilter(new FilterByUstensil(list))
 
 //const filterByUstensil = new FilterBy(list, 'ustensil', 'tertiary', 'Ustensiles');
