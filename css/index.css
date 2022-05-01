@@ -96,7 +96,7 @@ body {
 .search_tag_section {
     display: flex;
     gap: 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
     height: 55px;
 }
 
