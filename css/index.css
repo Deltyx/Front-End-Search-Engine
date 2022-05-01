@@ -97,6 +97,7 @@ body {
     display: flex;
     gap: 1rem;
     margin-bottom: 2rem;
+    height: 55px;
 }
 
 .search_tag_wrapper {
@@ -139,6 +140,7 @@ body {
     background-color: inherit;
     border-radius: 0 5px 5px 0;
     cursor: pointer;
+    z-index: 3;
 }
 
 .search_tag_btn:hover {
