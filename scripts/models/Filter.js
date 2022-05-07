@@ -31,7 +31,7 @@ export default class Filter {
     }
 
     async buildSelection() {
-        document.getElementById('tag_selection').innerHTML += `<div id="selection-${this.ref}"></div>`;
+        document.getElementById('tag_selection').innerHTML += `<div id="selection-${this.ref}" class="tag_selection"></div>`;
     }
 
     dropdownContentFilter() {

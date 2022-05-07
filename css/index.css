@@ -76,6 +76,11 @@ body {
     margin-bottom: 1.5rem;
 }
 
+.tag_selection {
+    display: flex;
+    gap: 0.5rem;
+}
+
 .tag_btn {
     border: none;
     border-radius: 5px;
