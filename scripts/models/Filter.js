@@ -30,6 +30,10 @@ export default class Filter {
         `
     }
 
+    async buildSelection() {
+        document.getElementById('tag_selection').innerHTML += `<div id="selection-${this.ref}"></div>`;
+    }
+
     dropdownContentFilter() {
         let dropdownContent = document.getElementById(`dropdown_filterBy_${this.ref}_content`).getElementsByClassName('dropdown_item');
         for(let i=0; i < dropdownContent.length; i++) {
@@ -48,7 +52,7 @@ export default class Filter {
         this.selection.forEach(tag => {
             html += new Tags(this.color, tag).render();
         })
-        document.getElementById('tag_selection').innerHTML = html;
+        document.getElementById(`selection-${this.ref}`).innerHTML = html;
         this.listenForUnselect();
     }
 
@@ -71,13 +75,15 @@ export default class Filter {
         document.addEventListener('click', (e) => {
             if(!e.target.closest('.search_tag_wrapper')) {
                 this.hideDropdownContent();
+                document.getElementById(`filterBy_${this.ref}_search`).value = "";
+                this.dropdownContentFilter(); 
             }
         })
     }
 
     listenOnKeyUp() {
         document.getElementById(`filterBy_${this.ref}_search`).addEventListener('keyup', () => {
-            this.dropdownContentFilter();
+            this.dropdownContentFilter();  
         })
     }
 
@@ -106,7 +112,7 @@ export default class Filter {
             document.querySelector(`.tag_btn[data-value="${tag}"]`).addEventListener('click', () => {
                 this.selection.delete(tag);
                 this.showSelection();
-                this.list.filter();
+                this.list.filter(true);
             })
         })
     }
@@ -129,6 +135,7 @@ export default class Filter {
 
     async start(list) {
         this.list = list;
+        await this.buildSelection();
         await this.buildDropdown();
         this.collect();
         this.display();

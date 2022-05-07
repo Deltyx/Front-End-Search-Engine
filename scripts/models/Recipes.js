@@ -28,8 +28,14 @@ export default class Recipes {
         document.getElementById('recipe-section').innerHTML = html;
     }
 
-    filter() {
+    filter(isUnselect = false) {
+
         let list = this.filtered;
+
+        if(isUnselect) {
+            list = this.all;
+        }
+        
         this.filters.forEach(filter => {
             list = filter.filter(list);
             console.log('filter', filter.ref, list);
@@ -42,5 +48,33 @@ export default class Recipes {
             filter.display();
             filter.listenForSelect();
         })
+    }
+
+    listenForSearch() {
+        const search = document.getElementById('search');
+    
+        search.addEventListener('keydown', (e) => {
+            if(search.value && search.value.trim().length >= 3) {
+                if(e.key === "Backspace") {
+                    this.search(this.all);
+                } else {
+                    this.search(this.filtered);
+                }
+            } else {
+                this.filtered = this.all;
+                this.display();
+            }    
+        })
+    }
+
+    search(list) {
+        let filtered = []
+        for(let i=0; i < list.length; i++) {
+            if(list[i].name.toUpperCase().indexOf(search.value.toUpperCase()) > -1) {
+                filtered.push(list[i]);
+            }
+        }
+        this.filtered = filtered;
+        this.display();
     }
 }

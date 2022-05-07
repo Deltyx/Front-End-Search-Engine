@@ -15,4 +15,4 @@ list.addFilter(new FilterByIngredient(list))
 list.addFilter(new FilterByAppliance(list))
 list.addFilter(new FilterByUstensil(list))
 
-//const filterByUstensil = new FilterBy(list, 'ustensil', 'tertiary', 'Ustensiles');
+list.listenForSearch();
