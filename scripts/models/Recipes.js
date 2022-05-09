@@ -53,7 +53,7 @@ export default class Recipes {
     listenForSearch() {
         const search = document.getElementById('search');
     
-        search.addEventListener('keydown', (e) => {
+        search.addEventListener('keyup', (e) => {
             if(search.value && search.value.trim().length >= 3) {
                 if(e.key === "Backspace") {
                     this.search(this.all);

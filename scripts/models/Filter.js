@@ -48,7 +48,6 @@ export default class Filter {
 
     showSelection() {
         let html = '';
-        console.log(this.selection);
         this.selection.forEach(tag => {
             html += new Tags(this.color, tag).render();
         })
@@ -127,6 +126,7 @@ export default class Filter {
     display() {
         let html = ''
         this.all.forEach(item => {
+            console.log(item)
             let classes = (this.selection.has(item)) ? 'dropdown_item-selected' : ''
             html += `<div class="dropdown_item ${classes}" data-value="${item}">${item}</div>`
         })
