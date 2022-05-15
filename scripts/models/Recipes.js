@@ -5,6 +5,7 @@ export default class Recipes {
         this.all = [];
         this.filtered = [];
         this.filters = [];
+        this.searchInput = '';
     }
 
     addFilter(filter) {
@@ -22,59 +23,66 @@ export default class Recipes {
 
     display() {
         let html = '';
-        this.filtered.forEach(recipe => {
-            html += recipe.render();
-        })
+        if(this.filtered.length > 0) {
+            this.filtered.forEach(recipe => {
+                html += recipe.render();
+            })
+        } else {
+            html = '<div class="recipe_no_result">Aucun résultat</div>'
+        }
         document.getElementById('recipe-section').innerHTML = html;
     }
 
     filter(isUnselect = false) {
-
+        const search = document.getElementById('search');
         let list = this.filtered;
 
-        if(isUnselect) {
+        if(isUnselect || this.searchInput.length >= search.value.length) {
             list = this.all;
         }
         
+        this.searchInput = search.value.toLowerCase();
+
         this.filters.forEach(filter => {
             list = filter.filter(list);
-            console.log('filter', filter.ref, list);
         })
 
+        list = this.search(list);
         this.filtered = list;
-        this.display();
+
         this.filters.forEach(filter => {
             filter.collect();
             filter.display();
             filter.listenForSelect();
         })
+        this.display();
     }
 
     listenForSearch() {
         const search = document.getElementById('search');
     
-        search.addEventListener('keyup', (e) => {
-            if(search.value && search.value.trim().length >= 3) {
-                if(e.key === "Backspace") {
-                    this.search(this.all);
-                } else {
-                    this.search(this.filtered);
-                }
-            } else {
-                this.filtered = this.all;
-                this.display();
-            }    
+        search.addEventListener('input', () => {
+            this.filter();
         })
     }
 
     search(list) {
+        return list.filter(recipe => {
+            return recipe.name.toLowerCase().includes(this.searchInput)
+                || recipe.description.toLowerCase().includes(this.searchInput)
+                || recipe.getIngredients().includes(this.searchInput)
+        })
+    }
+
+    searchAlt(list) {
         let filtered = []
         for(let i=0; i < list.length; i++) {
-            if(list[i].name.toUpperCase().indexOf(search.value.toUpperCase()) > -1) {
+            if(list[i].name.toLowerCase().indexOf(search.value.toLowerCase()) > -1
+            || list[i].description.toLowerCase().indexOf(search.value.toLowerCase()) > -1
+            || list[i].getIngredients().includes(search.value.toLowerCase())) {
                 filtered.push(list[i]);
             }
         }
-        this.filtered = filtered;
-        this.display();
+        return filtered;
     }
 }

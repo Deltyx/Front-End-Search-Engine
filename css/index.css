@@ -246,3 +246,16 @@ body {
 .dropdown_item-selected {
     text-decoration: line-through;
 }
+
+.recipe_no_result {
+    font-size: 20px;
+    color: gray;
+}
+
+.dropdown_filterBy_no_result {
+    display: none;
+    max-width: 100%;
+    color: white;
+    padding: 17px;
+    margin-top: -6px;
+}

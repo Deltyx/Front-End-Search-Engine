@@ -26,6 +26,7 @@ export default class Filter {
                 </button>
             </div>
             <div id="dropdown_filterBy_${this.ref}_content" class="dropdown_filterBy_content ${this.color}"></div>
+            <div id="dropdown_filterBy_${this.ref}_no_result" class="dropdown_filterBy_no_result ${this.color}">Aucun résultat</div>
         </div>
         `
     }
@@ -35,14 +36,22 @@ export default class Filter {
     }
 
     dropdownContentFilter() {
+        let count = 0;
+        document.getElementById(`dropdown_filterBy_${this.ref}_no_result`).style.display = "none"
         let dropdownContent = document.getElementById(`dropdown_filterBy_${this.ref}_content`).getElementsByClassName('dropdown_item');
         for(let i=0; i < dropdownContent.length; i++) {
             if(dropdownContent[i].innerText.toUpperCase().indexOf(document.getElementById(`filterBy_${this.ref}_search`).value.toUpperCase()) > -1
             || this.selection.has(dropdownContent[i].innerText)) {
                 dropdownContent[i].style.display = "";
+                count++;
             } else {
                 dropdownContent[i].style.display = "none";
             }
+        }
+
+        if(count === 0) {
+            this.showDropdownNoResult();
+            this.hideDropdownContent();
         }
     }
 
@@ -60,8 +69,16 @@ export default class Filter {
         this.listenForSelect();
     }
 
+    showDropdownNoResult() {
+        document.getElementById(`dropdown_filterBy_${this.ref}_no_result`).style.display = "block";
+    }
+
     hideDropdownContent() {
         document.getElementById(`dropdown_filterBy_${this.ref}_content`).style.display = "none";
+    }
+
+    hideDropdownNoResult() {
+        document.getElementById(`dropdown_filterBy_${this.ref}_no_result`).style.display = "none";
     }
 
     listenOnFocus() {
@@ -88,8 +105,12 @@ export default class Filter {
 
     listenOnClick() {
         document.getElementById(`dropdown_filterBy_${this.ref}_btn`).addEventListener('click', () => {
-            if(document.getElementById(`dropdown_filterBy_${this.ref}_content`).style.display === "grid") {
+            if(document.getElementById(`dropdown_filterBy_${this.ref}_content`).style.display === "grid"
+                || document.getElementById(`dropdown_filterBy_${this.ref}_no_result`).style.display === "block") {
                 this.hideDropdownContent();
+                this.hideDropdownNoResult();
+                document.getElementById(`filterBy_${this.ref}_search`).value = "";
+                this.dropdownContentFilter();
             } else {
                 this.showDropdownContent();
             } 
@@ -126,7 +147,6 @@ export default class Filter {
     display() {
         let html = ''
         this.all.forEach(item => {
-            console.log(item)
             let classes = (this.selection.has(item)) ? 'dropdown_item-selected' : ''
             html += `<div class="dropdown_item ${classes}" data-value="${item}">${item}</div>`
         })
