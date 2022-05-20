@@ -47,7 +47,14 @@ export default class Recipes {
             list = filter.filter(list);
         })
 
+        console.group('SpeedTest');
+        console.time()
+
         list = this.search(list);
+
+        console.groupEnd();
+        console.timeEnd();
+
         this.filtered = list;
 
         this.filters.forEach(filter => {
