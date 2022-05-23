@@ -50,7 +50,7 @@ export default class Recipes {
         console.group('SpeedTest');
         console.time()
 
-        list = this.search(list);
+        list = this.searchAlt(list);
 
         console.groupEnd();
         console.timeEnd();

@@ -259,3 +259,22 @@ body {
     padding: 17px;
     margin-top: -6px;
 }
+
+@media only screen and (max-width: 1400px) {
+    .recipe_section {
+        grid-template-columns: repeat(2, 1fr);
+    }
+} 
+
+@media only screen and (max-width: 992px) {
+    .recipe_section {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    .dropdown_filterBy_content {
+        grid-template-columns: repeat(3, 0.5fr);
+    }
+    .search_tag_section {
+        flex-direction: column;
+        min-height: 200px;
+    }
+}
