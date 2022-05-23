@@ -50,7 +50,7 @@ export default class Recipes {
         console.group('SpeedTest');
         console.time()
 
-        list = this.search(list);
+        list = this.searchAlt(list);
 
         console.groupEnd();
         console.timeEnd();
@@ -73,11 +73,15 @@ export default class Recipes {
         })
     }
 
-    search(list) {
-        return list.filter(recipe => {
-            return recipe.name.toLowerCase().includes(this.searchInput)
-                || recipe.description.toLowerCase().includes(this.searchInput)
-                || recipe.getIngredients().includes(this.searchInput)
-        })
+    searchAlt(list) {
+        let filtered = []
+        for(let i=0; i < list.length; i++) {
+            if(list[i].name.toLowerCase().indexOf(search.value.toLowerCase()) > -1
+            || list[i].description.toLowerCase().indexOf(search.value.toLowerCase()) > -1
+            || list[i].getIngredients().includes(search.value.toLowerCase())) {
+                filtered.push(list[i]);
+            }
+        }
+        return filtered;
     }
 }
